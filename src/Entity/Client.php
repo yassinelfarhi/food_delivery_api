@@ -8,8 +8,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={"get", "post"},
+ *     itemOperations={"get", "put", "delete"},
+ *     shortName="clients",
+ *     normalizationContext={"groups"={"clients:read"}, "swagger_definition_name"="Read"},
+ *     denormalizationContext={"groups"={"clients:write"}, "swagger_definition_name"="Write"},
+ * )
  * @ORM\Entity(repositoryClass=ClientRepository::class)
  */
 class Client
@@ -23,52 +37,62 @@ class Client
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"clients:read", "clients:write"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"clients:read", "clients:write"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"clients:read", "clients:write"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"clients:read", "clients:write"})
      */
     private $phone;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"clients:read", "clients:write"})
      */
     private $company;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"clients:read", "clients:write"})
      */
     private $note;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"clients:read", "clients:write"})
      */
     private $preferedDeliveryTime;
 
     /**
-     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="client")
+     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="client", cascade={"persist"})
+     * @Groups({"clients:read", "clients:write"})
      */
     private $relatedOrders;
 
     /**
-     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="client")
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="client", cascade={"persist"})
+     * @Groups({"clients:read", "clients:write"})
      */
     private $relatedPayments;
 
     /**
      * @ORM\OneToOne(targetEntity=Address::class, inversedBy="relatedClient", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"clients:read", "clients:write"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $client;
 

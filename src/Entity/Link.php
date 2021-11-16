@@ -36,7 +36,7 @@ class Link
 
     /**
      * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="links")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $relatedPayment;
 

@@ -6,8 +6,22 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OrderStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+
 /**
- * @ApiResource()
+ * @ApiResource(
+ *    collectionOperations={"get", "post"},
+ *     itemOperations={"get", "put", "delete"},
+ *     shortName="orderstatus",
+ *     normalizationContext={"groups"={"orderstatus:read"}, "swagger_definition_name"="Read"},
+ *     denormalizationContext={"groups"={"orderstatus:write"}, "swagger_definition_name"="Write"},
+ * )
  * @ORM\Entity(repositoryClass=OrderStatusRepository::class)
  */
 class OrderStatus
@@ -21,11 +35,13 @@ class OrderStatus
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"orderstatus:read", "orderstatus:write"})
      */
     private $name;
 
     /**
      * @ORM\OneToOne(targetEntity=Order::class, mappedBy="status", cascade={"persist", "remove"})
+     * @Groups({"orderstatus:read", "orderstatus:write"})
      */
     private $relatedOrder;
 

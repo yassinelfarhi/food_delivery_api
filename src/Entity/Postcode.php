@@ -36,7 +36,7 @@ class Postcode
 
     /**
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="deliveryPostcodes")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $relatedCompany;
 

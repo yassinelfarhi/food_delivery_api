@@ -31,13 +31,13 @@ class Addon
 
     /**
      * @ORM\ManyToOne(targetEntity=OrderItem::class, inversedBy="selectedAddons")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $relatedOrderItem;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="addons")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $relatedProduct;
 

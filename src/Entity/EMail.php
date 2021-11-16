@@ -36,7 +36,7 @@ class EMail
 
     /**
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="relatedEmails")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $company;
 

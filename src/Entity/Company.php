@@ -58,7 +58,7 @@ class Company
 
     /**
      * @ORM\OneToOne(targetEntity=Rating::class, inversedBy="relatedCompany", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $rating;
 

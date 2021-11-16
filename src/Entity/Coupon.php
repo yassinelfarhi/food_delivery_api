@@ -6,8 +6,22 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CouponRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={"get", "post"},
+ *     itemOperations={"get", "put", "delete"},
+ *     shortName="coupons",
+ *     normalizationContext={"groups"={"coupons:read"}, "swagger_definition_name"="Read"},
+ *     denormalizationContext={"groups"={"coupons:write"}, "swagger_definition_name"="Write"},
+ * )
  * @ORM\Entity(repositoryClass=CouponRepository::class)
  */
 class Coupon
@@ -21,22 +35,26 @@ class Coupon
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"coupons:read", "coupons:write"})
      */
     private $number;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"coupons:read", "coupons:write"})
      */
     private $string;
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="coupon")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @Groups({"coupons:read", "coupons:write"})
      */
     private $relatedOrder;
 
     /**
      * @ORM\OneToOne(targetEntity=Payment::class, mappedBy="coupon", cascade={"persist", "remove"})
+     * @Groups({"coupons:read", "coupons:write"})
      */
     private $relatedPayment;
 

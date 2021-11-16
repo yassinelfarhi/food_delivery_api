@@ -28,13 +28,13 @@ class Payment
 
     /**
      * @ORM\OneToOne(targetEntity=PaymentStatus::class, inversedBy="relatedPayment", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $paymentStatus;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="relatedPayments")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $client;
 
@@ -45,13 +45,13 @@ class Payment
 
     /**
      * @ORM\OneToOne(targetEntity=Coupon::class, inversedBy="relatedPayment", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $coupon;
 
     /**
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="paymentMethods")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $relatedCompany;
 

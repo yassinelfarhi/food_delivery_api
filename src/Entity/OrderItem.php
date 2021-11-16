@@ -7,9 +7,22 @@ use App\Repository\OrderItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={"get", "post"},
+ *     itemOperations={"get", "put", "delete"},
+ *     shortName="order_items",
+ *     normalizationContext={"groups"={"order_items:read"}, "swagger_definition_name"="Read"},
+ *     denormalizationContext={"groups"={"order_items:write"}, "swagger_definition_name"="Write"},
+ * )
  * @ORM\Entity(repositoryClass=OrderItemRepository::class)
  */
 class OrderItem
@@ -28,18 +41,21 @@ class OrderItem
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderItems")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @Groups({"order_items:read", "order_items:write"})
      */
     private $relatedOrder;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="relatedOrderItems")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @Groups({"order_items:read", "order_items:write"})
      */
     private $product;
 
     /**
      * @ORM\OneToMany(targetEntity=Addon::class, mappedBy="relatedOrderItem")
+     * @Groups({"order_items:read", "order_items:write"})
      */
     private $selectedAddons;
 

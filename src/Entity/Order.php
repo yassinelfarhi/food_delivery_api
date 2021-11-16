@@ -8,8 +8,23 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+
 /**
- * @ApiResource()
+ * @ApiResource( 
+ *     collectionOperations={"get", "post"},
+ *     itemOperations={"get", "put", "delete"},
+ *     shortName="orders",
+ *     normalizationContext={"groups"={"orders:read"}, "swagger_definition_name"="Read"},
+ *     denormalizationContext={"groups"={"orders:write"}, "swagger_definition_name"="Write"},
+ *     )
+ * @ApiFilter(SearchFilter::class, properties={"Search"})
  * @ORM\Entity(repositoryClass=OrderRepository::class)
  * @ORM\Table(name="`order`")
  */
@@ -24,38 +39,45 @@ class Order
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"orders:read","orders:write"})
      */
     private $amount;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"orders:read","orders:write"})
      */
     private $deliveryDate;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"orders:read","orders:write"})
      */
     private $complete;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="relatedOrder")
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="relatedOrder", cascade={"persist"})
+     * @Groups({"orders:read","orders:write"})
      */
     private $orderItems;
 
     /**
      * @ORM\OneToOne(targetEntity=OrderStatus::class, inversedBy="relatedOrder", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @Groups({"orders:read","orders:write"})
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="relatedOrders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @Groups({"orders:read","orders:write"})
      */
     private $client;
 
     /**
      * @ORM\OneToMany(targetEntity=Coupon::class, mappedBy="relatedOrder")
+     * @Groups({"orders:read","orders:write"})
      */
     private $coupon;
 
